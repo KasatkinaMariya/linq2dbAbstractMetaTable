@@ -98,7 +98,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logic\Model.Interfaces.csproj">
+    <ProjectReference Include="..\Model.Interfaces\Model.Interfaces.csproj">
       <Project>{ff49ba56-ffa7-41c5-8979-dbe474e9ccb9}</Project>
       <Name>Model.Interfaces</Name>
     </ProjectReference>
