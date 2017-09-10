@@ -1,0 +1,48 @@
+<#@ template language="C#" debug="True" hostSpecific="True"                            #>
+<#@ output extension=".generated.cs"                                                   #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\LinqToDB.PostgreSQL.Tools.ttinclude" #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\PluralizationService.ttinclude"      #>
+<#
+	/*
+		1. Copy this file to a folder where you would like to generate your data model,
+		   rename it, and delete .txt extension. For example:
+
+			MyProject
+				DataModels
+					MyDatabase.tt
+
+		2. Modify the connection settings below to connect to your database.
+
+		3. Add connection string to the web/app.config file:
+
+			<connectionStrings>
+				<add name="MyDatabase" connectionString="Server=MyServer;Port=5432;Database=MyDatabase;User Id=postgres;Password=TestPassword;Pooling=true;MinPoolSize=10;MaxPoolSize=100;Protocol=3;" providerName="PostgreSQL" />
+			</connectionStrings>
+
+		4. To access your database use the following code:
+
+			using (var db = new MyDatabaseDB())
+			{
+				var q =
+					from c in db.Customers
+					select c;
+
+				foreach (var c in q)
+					Console.WriteLine(c.ContactName);
+			}
+
+		5. See more at https://github.com/linq2db/t4models
+	*/
+	
+	NamespaceName = "Db.Linq2dbImplementation.DataModels";
+	DataContextName = "TestContext";	// DataContext class name. If null - database name + "DB".
+	DefaultConfiguration = "Postgres";	// Defines default configuration for default DataContext constructor.
+	PluralizeClassNames = false;		// If true, pluralizes table class names.
+	SingularizeClassNames = true;		// If true, singularizes table class names.
+	NormalizeNames = false;				// convert some_name to SomeName for types and members
+
+	LoadPostgreSQLMetadata("localhost", "5432", "test_linq2db", "postgres", "123");
+//	LoadPostgreSQLMetadata(string connectionString);
+
+	GenerateModel();
+#>
