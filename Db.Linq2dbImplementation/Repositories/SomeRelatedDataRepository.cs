@@ -19,6 +19,17 @@ namespace Db.Linq2dbImplementation.Repositories
                 db.Insert(dbLink, mapper.TableName);
         }
 
+        public IEnumerable<Link> GetLinks(EntityType type)
+        {
+            var mapper = Factory.GetMapper(type);
+            using (var db = new TestContext())
+            {
+                var query = from link in mapper.GetTable(db)
+                            select mapper.FromDbToModel(link);
+                return query.ToList();
+            }
+        }
+
         public IEnumerable<Guid> GetLinkedObjectIds(Entity entity)
         {
             using (var db = new TestContext())
