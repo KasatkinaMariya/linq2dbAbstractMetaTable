@@ -12,16 +12,11 @@ namespace Db.Linq2dbImplementation.Repositories
     {
         public void AddLink(Link link)
         {
-            /*
             var mapper = Factory.GetMapper(link.Entity);
             var dbLink = mapper.FromModelToDb(link);
 
             using (var db = new TestContext())
                 db.Insert(dbLink, mapper.TableName);
-            */
-
-            using (var db = new TestContext())
-                db.Insert(Factory.GetMapper(link.Entity).FromModelToDb(link));
         }
 
         public IEnumerable<Guid> GetLinkedObjectIds(Entity entity)
