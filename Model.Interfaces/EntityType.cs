@@ -1,8 +1,10 @@
-﻿namespace Model.Interfaces
+﻿using LinqToDB.Mapping;
+
+namespace Model.Interfaces
 {
     public enum EntityType
     {
-        TypeA,
-        TypeB,
+        [MapValue(1)] TypeA,
+        [MapValue(2)] TypeB,
     }
 }

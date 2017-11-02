@@ -63,8 +63,8 @@ namespace Db.Linq2dbImplementation.DataModels
 	public partial class entity_b
 	{
 		[PrimaryKey, NotNull] public Guid    id      { get; set; } // uuid
-		[Column,     NotNull] public decimal prop_b1 { get; set; } // numeric(2,2)
-		[Column,     NotNull] public decimal prop_b2 { get; set; } // numeric(2,2)
+		[Column,     NotNull] public decimal prop_b1 { get; set; } // numeric(4,2)
+		[Column,     NotNull] public decimal prop_b2 { get; set; } // numeric(4,2)
 
 		#region Associations
 
@@ -85,6 +85,7 @@ namespace Db.Linq2dbImplementation.DataModels
 		[Column,     NotNull ] public Guid           entity_id             { get; set; } // uuid
 		[Column,     NotNull ] public Guid           linked_object_id      { get; set; } // uuid
 		[Column,     NotNull ] public DateTimeOffset last_access_timestamp { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     entity_type           { get; set; } // smallint
         */
 		#region Associations
 
@@ -111,6 +112,7 @@ namespace Db.Linq2dbImplementation.DataModels
 		[Column,     NotNull ] public Guid           entity_id             { get; set; } // uuid
 		[Column,     NotNull ] public Guid           linked_object_id      { get; set; } // uuid
 		[Column,     NotNull ] public DateTimeOffset last_access_timestamp { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     entity_type           { get; set; } // smallint
         */
 		#region Associations
 

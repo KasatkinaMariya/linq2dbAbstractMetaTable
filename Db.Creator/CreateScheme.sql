@@ -24,10 +24,12 @@ CREATE TABLE some_data_entity_a (
 	, entity_id UUID NOT NULL REFERENCES entity_a
 	, linked_object_id UUID NOT NULL REFERENCES some_object
 	, last_access_timestamp TIMESTAMP WITH TIME ZONE NOT NULL
+	, entity_type SMALLINT NOT NULL DEFAULT = 1
 );
 CREATE TABLE some_data_entity_b (
 	  id SERIAL PRIMARY KEY
 	, entity_id UUID NOT NULL REFERENCES entity_b
 	, linked_object_id UUID NOT NULL REFERENCES some_object
 	, last_access_timestamp TIMESTAMP WITH TIME ZONE NOT NULL
+	, entity_type SMALLINT NOT NULL DEFAULT = 2
 );

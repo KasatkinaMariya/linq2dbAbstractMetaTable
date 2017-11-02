@@ -4,7 +4,7 @@ using Model.Interfaces;
 
 namespace Db.Linq2dbImplementation.Mapping
 {
-    class Factory
+    public class Factory
     {
         public static IMapper<some_data_entity_base> GetMapper(Entity entity) => GetMapper(entity.Type);
         public static IMapper<some_data_entity_base> GetMapper(EntityType type)

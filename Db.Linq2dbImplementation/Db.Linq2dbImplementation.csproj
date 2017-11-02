@@ -53,9 +53,7 @@
     <Compile Include="Mapping\IMapper.cs" />
     <Compile Include="Mapping\MapperA.cs" />
     <Compile Include="Mapping\MapperB.cs" />
-    <Compile Include="Mapping\MapperBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\SomeRelatedDataRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LinqToDB.Templates\DataAnnotations.ttinclude" />
@@ -103,5 +101,6 @@
       <Name>Model.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,35 +6,33 @@ using Db.Linq2dbImplementation.Mapping;
 using LinqToDB;
 using Model.Interfaces;
 
-namespace Db.Linq2dbImplementation.Repositories
+namespace Model.Logic
 {
-    public class SomeRelatedDataRepository : ISomeRelatedDataRepository
+    public class SomeRelatedManager
     {
-        public void AddLink(Link link)
+        public void AddLink(some_data_entity_base link)
         {
-            var mapper = Factory.GetMapper(link.Entity);
-            var dbLink = mapper.FromModelToDb(link);
-
+            var mapper = Factory.GetMapper(link.entity_type);
             using (var db = new TestContext())
-                db.Insert(dbLink, mapper.TableName);
+                db.Insert(link, mapper.TableName);
         }
 
-        public IEnumerable<Link> GetLinks(EntityType type)
+        public IEnumerable<some_data_entity_base> GetLinks(EntityType type)
         {
             var mapper = Factory.GetMapper(type);
             using (var db = new TestContext())
             {
-                var query = from link in mapper.GetTable(db)
-                            select mapper.FromDbToModel(link);
+                var query = mapper.GetTable(db);
                 return query.ToList();
             }
         }
 
         public IEnumerable<Guid> GetLinkedObjectIds(Entity entity)
         {
+            var mapper = Factory.GetMapper(entity);
             using (var db = new TestContext())
             {
-                var query = from link in Factory.GetMapper(entity).GetTable(db)
+                var query = from link in mapper.GetTable(db)
                     where link.entity_id == entity.Id
                     select link.linked_object_id;
                 return query.ToList();
