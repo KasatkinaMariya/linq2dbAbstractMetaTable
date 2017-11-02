@@ -4,28 +4,28 @@ using Model.Interfaces;
 
 namespace Db.Linq2dbImplementation.DataModels
 {
-    public abstract class some_data_entity_base
+    public abstract class LinkEntityBase
     {
-        [PrimaryKey, Identity] public int id { get; set; } // integer
-        [Column, NotNull] public Guid entity_id { get; set; } // uuid
-        [Column, NotNull] public Guid linked_object_id { get; set; } // uuid
-        [Column, NotNull] public DateTimeOffset last_access_timestamp { get; set; } // timestamp (6) with time zone
-        [Column, NotNull] public EntityType entity_type { get; set; } // smallint
+        [PrimaryKey, Identity] public int Id { get; set; } // integer
+        [Column, NotNull] public Guid EntityId { get; set; } // uuid
+        [Column, NotNull] public Guid LinkedObjectId { get; set; } // uuid
+        [Column, NotNull] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
+        [Column, NotNull] public EntityType EntityType { get; set; } // smallint
     }
 
-    public partial class some_data_entity_a : some_data_entity_base
+    public partial class LinkEntityA : LinkEntityBase
     {
-        public some_data_entity_a()
+        public LinkEntityA()
         {
-            entity_type = EntityType.TypeA;
+            EntityType = EntityType.TypeA;
         }
     }
 
-    public partial class some_data_entity_b : some_data_entity_base
+    public partial class LinkEntityB : LinkEntityBase
     {
-        public some_data_entity_b()
+        public LinkEntityB()
         {
-            entity_type = EntityType.TypeB;
+            EntityType = EntityType.TypeB;
         }
     }
 }

@@ -6,8 +6,8 @@ namespace Db.Linq2dbImplementation.Mapping
 {
     public class Factory
     {
-        public static IMapper<some_data_entity_base> GetMapper(Entity entity) => GetMapper(entity.Type);
-        public static IMapper<some_data_entity_base> GetMapper(EntityType type)
+        public static IMapper<LinkEntityBase> GetMapper(Entity entity) => GetMapper(entity.Type);
+        public static IMapper<LinkEntityBase> GetMapper(EntityType type)
         {
             if (type == EntityType.TypeA)
                 return new MapperA();

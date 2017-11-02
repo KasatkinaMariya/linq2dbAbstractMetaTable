@@ -10,14 +10,14 @@ namespace Model.Logic
 {
     public class SomeRelatedManager
     {
-        public void AddLink(some_data_entity_base link)
+        public void AddLink(LinkEntityBase link)
         {
-            var mapper = Factory.GetMapper(link.entity_type);
+            var mapper = Factory.GetMapper(link.EntityType);
             using (var db = new TestContext())
                 db.Insert(link, mapper.TableName);
         }
 
-        public IEnumerable<some_data_entity_base> GetLinks(EntityType type)
+        public IEnumerable<LinkEntityBase> GetLinks(EntityType type)
         {
             var mapper = Factory.GetMapper(type);
             using (var db = new TestContext())
@@ -33,8 +33,8 @@ namespace Model.Logic
             using (var db = new TestContext())
             {
                 var query = from link in mapper.GetTable(db)
-                    where link.entity_id == entity.Id
-                    select link.linked_object_id;
+                    where link.EntityId == entity.Id
+                    select link.LinkedObjectId;
                 return query.ToList();
             }
         }
@@ -44,8 +44,8 @@ namespace Model.Logic
             using (var db = new TestContext())
             {
                 Factory.GetMapper(entity).GetTable(db)
-                    .Where(x => x.entity_id == entity.Id && x.linked_object_id == linkedObjectId)
-                    .Set(x => x.last_access_timestamp, DateTimeOffset.Now)
+                    .Where(x => x.EntityId == entity.Id && x.LinkedObjectId == linkedObjectId)
+                    .Set(x => x.LastAccessTimestamp, DateTimeOffset.Now)
                     .Update();
             }
         }

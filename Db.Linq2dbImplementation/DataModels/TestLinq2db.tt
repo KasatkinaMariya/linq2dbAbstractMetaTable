@@ -44,8 +44,8 @@
 	LoadPostgreSQLMetadata("localhost", "5432", "test_linq2db", "postgres", "123");
 //	LoadPostgreSQLMetadata(string connectionString);
 
-	Tables["some_data_entity_a"].Columns["entity_type"].Type = "EntityType";
-	Tables["some_data_entity_b"].Columns["entity_type"].Type = "EntityType";
+	Tables["LinkEntityA"].Columns["EntityType"].Type = "EntityType";
+	Tables["LinkEntityB"].Columns["EntityType"].Type = "EntityType";
 
 	GenerateModel();
 #>

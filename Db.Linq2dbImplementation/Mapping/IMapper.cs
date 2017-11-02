@@ -4,7 +4,7 @@ using Model.Interfaces;
 
 namespace Db.Linq2dbImplementation.Mapping
 {
-    public interface IMapper<out TDb> where TDb : some_data_entity_base
+    public interface IMapper<out TDb> where TDb : LinkEntityBase
     {
         EntityType Type { get; }
 

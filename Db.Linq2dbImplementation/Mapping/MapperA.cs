@@ -4,11 +4,11 @@ using Model.Interfaces;
 
 namespace Db.Linq2dbImplementation.Mapping
 {
-    public class MapperA : IMapper<some_data_entity_a>
+    public class MapperA : IMapper<LinkEntityA>
     {
         public EntityType Type { get; } = EntityType.TypeA;
 
-        public string TableName { get; } = "some_data_entity_a";
-        public ITable<some_data_entity_a> GetTable(TestContext db) => db.some_data_entity_a;
+        public string TableName { get; } = "LinkEntityA";
+        public ITable<LinkEntityA> GetTable(TestContext db) => db.LinkEntityA;
     }
 }

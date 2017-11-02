@@ -16,15 +16,15 @@ namespace Db.Linq2dbImplementation.DataModels
 	/// <summary>
 	/// Database       : test_linq2db
 	/// Data Source    : tcp://localhost:5432
-	/// Server Version : 9.5.2
+	/// Server Version : 9.6.3
 	/// </summary>
 	public partial class TestContext : LinqToDB.Data.DataConnection
 	{
-		public ITable<entity_a>           entity_a           { get { return this.GetTable<entity_a>(); } }
-		public ITable<entity_b>           entity_b           { get { return this.GetTable<entity_b>(); } }
-		public ITable<some_data_entity_a> some_data_entity_a { get { return this.GetTable<some_data_entity_a>(); } }
-		public ITable<some_data_entity_b> some_data_entity_b { get { return this.GetTable<some_data_entity_b>(); } }
-		public ITable<some_object>        some_object        { get { return this.GetTable<some_object>(); } }
+		public ITable<EntityA>     EntityA     { get { return this.GetTable<EntityA>(); } }
+		public ITable<EntityB>     EntityB     { get { return this.GetTable<EntityB>(); } }
+		public ITable<LinkEntityA> LinkEntityA { get { return this.GetTable<LinkEntityA>(); } }
+		public ITable<LinkEntityB> LinkEntityB { get { return this.GetTable<LinkEntityB>(); } }
+		public ITable<SomeObject>  SomeObjects { get { return this.GetTable<SomeObject>(); } }
 
 		public TestContext()
 			: base("Postgres")
@@ -41,148 +41,148 @@ namespace Db.Linq2dbImplementation.DataModels
 		partial void InitDataContext();
 	}
 
-	[Table(Schema="public", Name="entity_a")]
-	public partial class entity_a
+	[Table(Schema="public", Name="EntityA")]
+	public partial class EntityA
 	{
-		[PrimaryKey, NotNull] public Guid   id      { get; set; } // uuid
-		[Column,     NotNull] public string prop_a1 { get; set; } // character varying
-		[Column,     NotNull] public bool   prop_a2 { get; set; } // boolean
+		[PrimaryKey, NotNull] public Guid   Id     { get; set; } // uuid
+		[Column,     NotNull] public string PropA1 { get; set; } // character varying
+		[Column,     NotNull] public bool   PropA2 { get; set; } // boolean
 
 		#region Associations
 
 		/// <summary>
-		/// some_data_entity_a_entity_id_fkey_BackReference
+		/// LinkEntityA_EntityId_fkey_BackReference
 		/// </summary>
-		[Association(ThisKey="id", OtherKey="entity_id", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<some_data_entity_a> somedataentityaentityidfkeys { get; set; }
+		[Association(ThisKey="Id", OtherKey="EntityId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LinkEntityA> LinkEntityAEntityIdfkeys { get; set; }
 
 		#endregion
 	}
 
-	[Table(Schema="public", Name="entity_b")]
-	public partial class entity_b
+	[Table(Schema="public", Name="EntityB")]
+	public partial class EntityB
 	{
-		[PrimaryKey, NotNull] public Guid    id      { get; set; } // uuid
-		[Column,     NotNull] public decimal prop_b1 { get; set; } // numeric(4,2)
-		[Column,     NotNull] public decimal prop_b2 { get; set; } // numeric(4,2)
+		[PrimaryKey, NotNull] public Guid    Id     { get; set; } // uuid
+		[Column,     NotNull] public decimal PropB1 { get; set; } // numeric(4,2)
+		[Column,     NotNull] public decimal PropB2 { get; set; } // numeric(4,2)
 
 		#region Associations
 
 		/// <summary>
-		/// some_data_entity_b_entity_id_fkey_BackReference
+		/// LinkEntityB_EntityId_fkey_BackReference
 		/// </summary>
-		[Association(ThisKey="id", OtherKey="entity_id", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<some_data_entity_b> somedataentitybentityidfkeys { get; set; }
+		[Association(ThisKey="Id", OtherKey="EntityId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LinkEntityB> LinkEntityBEntityIdfkeys { get; set; }
 
 		#endregion
 	}
 
-	[Table(Schema="public", Name="some_data_entity_a")]
-	public partial class some_data_entity_a
+	[Table(Schema="public", Name="LinkEntityA")]
+	public partial class LinkEntityA
 	{
         /*
-		[PrimaryKey, Identity] public int            id                    { get; set; } // integer
-		[Column,     NotNull ] public Guid           entity_id             { get; set; } // uuid
-		[Column,     NotNull ] public Guid           linked_object_id      { get; set; } // uuid
-		[Column,     NotNull ] public DateTimeOffset last_access_timestamp { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     entity_type           { get; set; } // smallint
+		[PrimaryKey, Identity] public int            Id                  { get; set; } // integer
+		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
+		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
+		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
         */
 		#region Associations
 
 		/// <summary>
-		/// some_data_entity_a_entity_id_fkey
+		/// LinkEntityA_EntityId_fkey
 		/// </summary>
-		[Association(ThisKey="entity_id", OtherKey="id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="some_data_entity_a_entity_id_fkey", BackReferenceName="somedataentityaentityidfkeys")]
-		public entity_a somedataentityaentityidfkey { get; set; }
+		[Association(ThisKey="EntityId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="LinkEntityA_EntityId_fkey", BackReferenceName="LinkEntityAEntityIdfkeys")]
+		public EntityA EntityIdfkey { get; set; }
 
 		/// <summary>
-		/// some_data_entity_a_linked_object_id_fkey
+		/// LinkEntityA_LinkedObjectId_fkey
 		/// </summary>
-		[Association(ThisKey="linked_object_id", OtherKey="id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="some_data_entity_a_linked_object_id_fkey", BackReferenceName="somedataentityalinkedobjectidfkeys")]
-		public some_object somedataentityalinkedobjectidfkey { get; set; }
+		[Association(ThisKey="LinkedObjectId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="LinkEntityA_LinkedObjectId_fkey", BackReferenceName="LinkEntityALinkedObjectIdfkeys")]
+		public SomeObject LinkedObjectIdfkey { get; set; }
 
 		#endregion
 	}
 
-	[Table(Schema="public", Name="some_data_entity_b")]
-	public partial class some_data_entity_b
+	[Table(Schema="public", Name="LinkEntityB")]
+	public partial class LinkEntityB
 	{
         /*
-		[PrimaryKey, Identity] public int            id                    { get; set; } // integer
-		[Column,     NotNull ] public Guid           entity_id             { get; set; } // uuid
-		[Column,     NotNull ] public Guid           linked_object_id      { get; set; } // uuid
-		[Column,     NotNull ] public DateTimeOffset last_access_timestamp { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     entity_type           { get; set; } // smallint
+		[PrimaryKey, Identity] public int            Id                  { get; set; } // integer
+		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
+		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
+		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
         */
 		#region Associations
 
 		/// <summary>
-		/// some_data_entity_b_entity_id_fkey
+		/// LinkEntityB_EntityId_fkey
 		/// </summary>
-		[Association(ThisKey="entity_id", OtherKey="id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="some_data_entity_b_entity_id_fkey", BackReferenceName="somedataentitybentityidfkeys")]
-		public entity_b somedataentitybentityidfkey { get; set; }
+		[Association(ThisKey="EntityId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="LinkEntityB_EntityId_fkey", BackReferenceName="LinkEntityBEntityIdfkeys")]
+		public EntityB EntityIdfkey { get; set; }
 
 		/// <summary>
-		/// some_data_entity_b_linked_object_id_fkey
+		/// LinkEntityB_LinkedObjectId_fkey
 		/// </summary>
-		[Association(ThisKey="linked_object_id", OtherKey="id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="some_data_entity_b_linked_object_id_fkey", BackReferenceName="somedataentityblinkedobjectidfkeys")]
-		public some_object somedataentityblinkedobjectidfkey { get; set; }
+		[Association(ThisKey="LinkedObjectId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="LinkEntityB_LinkedObjectId_fkey", BackReferenceName="LinkEntityBLinkedObjectIdfkeys")]
+		public SomeObject LinkedObjectIdfkey { get; set; }
 
 		#endregion
 	}
 
-	[Table(Schema="public", Name="some_object")]
-	public partial class some_object
+	[Table(Schema="public", Name="SomeObject")]
+	public partial class SomeObject
 	{
-		[PrimaryKey, NotNull] public Guid id { get; set; } // uuid
+		[PrimaryKey, NotNull] public Guid Id { get; set; } // uuid
 
 		#region Associations
 
 		/// <summary>
-		/// some_data_entity_a_linked_object_id_fkey_BackReference
+		/// LinkEntityA_LinkedObjectId_fkey_BackReference
 		/// </summary>
-		[Association(ThisKey="id", OtherKey="linked_object_id", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<some_data_entity_a> somedataentityalinkedobjectidfkeys { get; set; }
+		[Association(ThisKey="Id", OtherKey="LinkedObjectId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LinkEntityA> LinkEntityALinkedObjectIdfkeys { get; set; }
 
 		/// <summary>
-		/// some_data_entity_b_linked_object_id_fkey_BackReference
+		/// LinkEntityB_LinkedObjectId_fkey_BackReference
 		/// </summary>
-		[Association(ThisKey="id", OtherKey="linked_object_id", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<some_data_entity_b> somedataentityblinkedobjectidfkeys { get; set; }
+		[Association(ThisKey="Id", OtherKey="LinkedObjectId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LinkEntityB> LinkEntityBLinkedObjectIdfkeys { get; set; }
 
 		#endregion
 	}
 
 	public static partial class TableExtensions
 	{
-		public static entity_a Find(this ITable<entity_a> table, Guid id)
+		public static EntityA Find(this ITable<EntityA> table, Guid Id)
 		{
 			return table.FirstOrDefault(t =>
-				t.id == id);
+				t.Id == Id);
 		}
 
-		public static entity_b Find(this ITable<entity_b> table, Guid id)
+		public static EntityB Find(this ITable<EntityB> table, Guid Id)
 		{
 			return table.FirstOrDefault(t =>
-				t.id == id);
+				t.Id == Id);
 		}
 
-		public static some_data_entity_a Find(this ITable<some_data_entity_a> table, int id)
+		public static LinkEntityA Find(this ITable<LinkEntityA> table, int Id)
 		{
 			return table.FirstOrDefault(t =>
-				t.id == id);
+				t.Id == Id);
 		}
 
-		public static some_data_entity_b Find(this ITable<some_data_entity_b> table, int id)
+		public static LinkEntityB Find(this ITable<LinkEntityB> table, int Id)
 		{
 			return table.FirstOrDefault(t =>
-				t.id == id);
+				t.Id == Id);
 		}
 
-		public static some_object Find(this ITable<some_object> table, Guid id)
+		public static SomeObject Find(this ITable<SomeObject> table, Guid Id)
 		{
 			return table.FirstOrDefault(t =>
-				t.id == id);
+				t.Id == Id);
 		}
 	}
 }
