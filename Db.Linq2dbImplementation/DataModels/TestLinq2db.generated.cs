@@ -8,8 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Db.Linq2dbImplementation.DataModels;
+
 using LinqToDB;
 using LinqToDB.Mapping;
+
+using Model.Interfaces;
 
 namespace Db.Linq2dbImplementation.DataModels
 {
@@ -20,6 +24,9 @@ namespace Db.Linq2dbImplementation.DataModels
 	/// </summary>
 	public partial class TestContext : LinqToDB.Data.DataConnection
 	{
+		public ITable<DataEntityA> DataEntityA { get { return this.GetTable<DataEntityA>(); } }
+		public ITable<DataEntityB> DataEntityB { get { return this.GetTable<DataEntityB>(); } }
+		public ITable<DataSource>  DataSources { get { return this.GetTable<DataSource>(); } }
 		public ITable<EntityA>     EntityA     { get { return this.GetTable<EntityA>(); } }
 		public ITable<EntityB>     EntityB     { get { return this.GetTable<EntityB>(); } }
 		public ITable<LinkEntityA> LinkEntityA { get { return this.GetTable<LinkEntityA>(); } }
@@ -41,6 +48,68 @@ namespace Db.Linq2dbImplementation.DataModels
 		partial void InitDataContext();
 	}
 
+	[Table(Schema="public", Name="DataEntityA")]
+	public partial class DataEntityA : DataEntityBase
+	{
+		#region Associations
+
+		/// <summary>
+		/// DataEntityA_EntityId_fkey
+		/// </summary>
+		[Association(ThisKey="EntityId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="DataEntityA_EntityId_fkey", BackReferenceName="DataEntityAEntityIdfkeys")]
+		public EntityA EntityIdfkey { get; set; }
+
+		/// <summary>
+		/// DataEntityA_SourceId_fkey
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="DataEntityA_SourceId_fkey", BackReferenceName="DataEntityASourceIdfkeys")]
+		public DataSource SourceIdfkey { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="public", Name="DataEntityB")]
+	public partial class DataEntityB : DataEntityBase
+	{
+		#region Associations
+
+		/// <summary>
+		/// DataEntityB_EntityId_fkey
+		/// </summary>
+		[Association(ThisKey="EntityId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="DataEntityB_EntityId_fkey", BackReferenceName="DataEntityBEntityIdfkeys")]
+		public EntityB EntityIdfkey { get; set; }
+
+		/// <summary>
+		/// DataEntityB_SourceId_fkey
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="DataEntityB_SourceId_fkey", BackReferenceName="DataEntityBSourceIdfkeys")]
+		public DataSource SourceIdfkey { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="public", Name="DataSource")]
+	public partial class DataSource
+	{
+		[PrimaryKey, NotNull] public Guid Id { get; set; } // uuid
+
+		#region Associations
+
+		/// <summary>
+		/// DataEntityA_SourceId_fkey_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="SourceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<DataEntityA> DataEntityASourceIdfkeys { get; set; }
+
+		/// <summary>
+		/// DataEntityB_SourceId_fkey_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="SourceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<DataEntityB> DataEntityBSourceIdfkeys { get; set; }
+
+		#endregion
+	}
+
 	[Table(Schema="public", Name="EntityA")]
 	public partial class EntityA
 	{
@@ -49,6 +118,12 @@ namespace Db.Linq2dbImplementation.DataModels
 		[Column,     NotNull] public bool   PropA2 { get; set; } // boolean
 
 		#region Associations
+
+		/// <summary>
+		/// DataEntityA_EntityId_fkey_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="EntityId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<DataEntityA> DataEntityAEntityIdfkeys { get; set; }
 
 		/// <summary>
 		/// LinkEntityA_EntityId_fkey_BackReference
@@ -69,6 +144,12 @@ namespace Db.Linq2dbImplementation.DataModels
 		#region Associations
 
 		/// <summary>
+		/// DataEntityB_EntityId_fkey_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="EntityId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<DataEntityB> DataEntityBEntityIdfkeys { get; set; }
+
+		/// <summary>
 		/// LinkEntityB_EntityId_fkey_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="EntityId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -78,15 +159,8 @@ namespace Db.Linq2dbImplementation.DataModels
 	}
 
 	[Table(Schema="public", Name="LinkEntityA")]
-	public partial class LinkEntityA
+	public partial class LinkEntityA : LinkEntityBase
 	{
-        /*
-		[PrimaryKey, Identity] public int            Id                  { get; set; } // integer
-		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
-		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
-		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
-        */
 		#region Associations
 
 		/// <summary>
@@ -105,15 +179,8 @@ namespace Db.Linq2dbImplementation.DataModels
 	}
 
 	[Table(Schema="public", Name="LinkEntityB")]
-	public partial class LinkEntityB
+	public partial class LinkEntityB : LinkEntityBase
 	{
-        /*
-		[PrimaryKey, Identity] public int            Id                  { get; set; } // integer
-		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
-		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
-		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
-        */
 		#region Associations
 
 		/// <summary>
@@ -155,6 +222,24 @@ namespace Db.Linq2dbImplementation.DataModels
 
 	public static partial class TableExtensions
 	{
+		public static DataEntityA Find(this ITable<DataEntityA> table, int Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static DataEntityB Find(this ITable<DataEntityB> table, int Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static DataSource Find(this ITable<DataSource> table, Guid Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static EntityA Find(this ITable<EntityA> table, Guid Id)
 		{
 			return table.FirstOrDefault(t =>
@@ -183,6 +268,103 @@ namespace Db.Linq2dbImplementation.DataModels
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
+		}
+	}
+
+	public partial class DataEntityBase
+	{
+		[PrimaryKey, Identity] public int            Id         { get; set; } // integer
+		[Column,     NotNull ] public Guid           EntityId   { get; set; } // uuid
+		[Column,     NotNull ] public Guid           SourceId   { get; set; } // uuid
+		[Column,     NotNull ] public decimal        Value      { get; set; } // numeric(4,2)
+		[Column,     NotNull ] public DateTimeOffset Timestamp  { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     EntityType { get; set; } // smallint
+	}
+
+	public partial class LinkEntityBase
+	{
+		[PrimaryKey, Identity] public int            Id                  { get; set; } // integer
+		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
+		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
+		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
+		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
+	}
+}
+
+namespace Db.Linq2dbImplementation.DataModels
+{
+	public abstract partial class DataEntityBase {}
+	public partial class DataEntityA : DataEntityBase
+	{
+		public DataEntityA()
+		{
+			EntityType = EntityType.TypeA;
+		}
+	}
+	public partial class DataEntityB : DataEntityBase
+	{
+		public DataEntityB()
+		{
+			EntityType = EntityType.TypeB;
+		}
+	}
+
+	public abstract partial class LinkEntityBase {}
+	public partial class LinkEntityA : LinkEntityBase
+	{
+		public LinkEntityA()
+		{
+			EntityType = EntityType.TypeA;
+		}
+	}
+	public partial class LinkEntityB : LinkEntityBase
+	{
+		public LinkEntityB()
+		{
+			EntityType = EntityType.TypeB;
+		}
+	}
+
+}
+
+namespace Db.Linq2dbImplementation.Mapping
+{
+	public interface IMapper<out TData, out TLink>
+		where TData : DataEntityBase
+		where TLink : LinkEntityBase
+	{
+		EntityType Type { get; }
+
+		ITable<TData> GetDataTable(TestContext db);
+		ITable<TLink> GetLinkTable(TestContext db);
+	}
+
+	public class MapperTypeA : IMapper<DataEntityA, LinkEntityA>
+	{
+		public EntityType Type { get; } = EntityType.TypeA;
+
+		public ITable<DataEntityA> GetDataTable(TestContext db) => db.DataEntityA;
+		public ITable<LinkEntityA> GetLinkTable(TestContext db) => db.LinkEntityA;
+	}
+
+	public class MapperTypeB : IMapper<DataEntityB, LinkEntityB>
+	{
+		public EntityType Type { get; } = EntityType.TypeB;
+
+		public ITable<DataEntityB> GetDataTable(TestContext db) => db.DataEntityB;
+		public ITable<LinkEntityB> GetLinkTable(TestContext db) => db.LinkEntityB;
+	}
+
+	public class Factory
+	{
+		public static IMapper<DataEntityBase, LinkEntityBase> GetMapper(Entity entity) => GetMapper(entity.Type);
+		public static IMapper<DataEntityBase, LinkEntityBase> GetMapper(EntityType type)
+		{
+			if (type == EntityType.TypeA)
+				return new MapperTypeA();
+			if (type == EntityType.TypeB)
+				return new MapperTypeB();
+			throw new ArgumentException($"No mapping for entityEnumValue='{type}'");
 		}
 	}
 }

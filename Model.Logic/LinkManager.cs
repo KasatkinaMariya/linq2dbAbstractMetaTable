@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db.Linq2dbImplementation;
 using Db.Linq2dbImplementation.DataModels;
 using Db.Linq2dbImplementation.Mapping;
 using LinqToDB;
@@ -8,13 +9,12 @@ using Model.Interfaces;
 
 namespace Model.Logic
 {
-    public class SomeRelatedManager
+    public class LinkManager
     {
         public void AddLink(LinkEntityBase link)
         {
-            var mapper = Factory.GetMapper(link.EntityType);
             using (var db = new TestContext())
-                db.Insert(link, mapper.TableName);
+                db.InsertWithTableName(link);
         }
 
         public IEnumerable<LinkEntityBase> GetLinks(EntityType type)
@@ -22,7 +22,7 @@ namespace Model.Logic
             var mapper = Factory.GetMapper(type);
             using (var db = new TestContext())
             {
-                var query = mapper.GetTable(db);
+                var query = mapper.GetLinkTable(db);
                 return query.ToList();
             }
         }
@@ -32,7 +32,7 @@ namespace Model.Logic
             var mapper = Factory.GetMapper(entity);
             using (var db = new TestContext())
             {
-                var query = from link in mapper.GetTable(db)
+                var query = from link in mapper.GetLinkTable(db)
                     where link.EntityId == entity.Id
                     select link.LinkedObjectId;
                 return query.ToList();
@@ -43,7 +43,7 @@ namespace Model.Logic
         {
             using (var db = new TestContext())
             {
-                Factory.GetMapper(entity).GetTable(db)
+                Factory.GetMapper(entity).GetLinkTable(db)
                     .Where(x => x.EntityId == entity.Id && x.LinkedObjectId == linkedObjectId)
                     .Set(x => x.LastAccessTimestamp, DateTimeOffset.Now)
                     .Update();

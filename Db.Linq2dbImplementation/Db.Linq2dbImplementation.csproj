@@ -43,19 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataModels\TestContextManual.cs" />
     <Compile Include="DataModels\TestLinq2db.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TestLinq2db.tt</DependentUpon>
     </Compile>
-    <Compile Include="Mapping\Factory.cs" />
-    <Compile Include="Mapping\IMapper.cs" />
-    <Compile Include="Mapping\MapperA.cs" />
-    <Compile Include="Mapping\MapperB.cs" />
+    <Compile Include="Linq2DbExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LinqToDB.Inheritance\InheritanceMapping.ttinclude" />
+    <None Include="LinqToDB.Inheritance\InheritancePocos.ttinclude" />
+    <None Include="LinqToDB.Inheritance\ConcreteTableInheritance.ttinclude" />
     <None Include="LinqToDB.Templates\DataAnnotations.ttinclude" />
     <None Include="LinqToDB.Templates\DataModel.ttinclude" />
     <None Include="LinqToDB.Templates\EditableObject.ttinclude" />

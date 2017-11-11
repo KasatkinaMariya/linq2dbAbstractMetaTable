@@ -1,0 +1,107 @@
+﻿<#
+var conf = InheritanceConf;
+if (conf != null && conf.Inheritances.Any())
+{
+#>
+namespace Db.Linq2dbImplementation.DataModels
+{
+<#
+var inheritances = conf.Inheritances;
+foreach (ConcreteTableInheritance inheritance in inheritances)
+{
+#>
+	public abstract partial class <#=inheritance.BaseClass#> {}
+<#
+	foreach (ConcreteTable concreteTable in inheritance.ConcreteTables)
+	{
+#>
+	public partial class <#=concreteTable.Table#> : <#=inheritance.BaseClass#>
+	{
+		public <#=concreteTable.Table#>()
+		{
+			<#=conf.EntityTypeColumn#> = <#=conf.EntityEnumType#>.<#=concreteTable.EntityEnumValue#>;
+		}
+	}
+<#
+	}		
+	WriteLine("");
+}
+#>
+}
+
+namespace Db.Linq2dbImplementation.Mapping
+{
+<#
+// IMapper
+// out TData, out TLink
+var typeParameters = inheritances.Select(x => "out " + x.TypeParameter).Aggregate((s1, s2) => s1 + ", " + s2);
+#>
+	public interface IMapper<<#=typeParameters#>>
+<#
+// where TData : DataEntityBase
+foreach (ConcreteTableInheritance inheritance in inheritances)
+	WriteLine("\t\twhere {0} : {1}", inheritance.TypeParameter, inheritance.BaseClass);
+#>
+	{
+		<#=conf.EntityEnumType#> Type { get; }
+
+<#
+// ITable<TData> GetDataTable(TestContext db);
+foreach (ConcreteTableInheritance inheritance in inheritances)
+	WriteLine("\t\tITable<{0}> {1}({2} db);", inheritance.TypeParameter, inheritance.GetTableMethod, DataContextName);
+#>
+	}
+<#
+// IMapper implementations
+foreach (string entityValue in conf.EntityEnumValues)
+{
+	var concreteTypeParameters = inheritances.OrderBy(x => x.BaseClass)
+								.SelectMany(x => x.ConcreteTables)
+								.Where(x => x.EntityEnumValue == entityValue)
+								.Select(x => x.Table)
+								.Aggregate((s1, s2) => s1 + ", " + s2);
+#>
+
+	public class Mapper<#=entityValue#> : IMapper<<#=concreteTypeParameters#>>
+	{
+		public <#=conf.EntityEnumType#> Type { get; } = <#=conf.EntityEnumType#>.<#=entityValue#>;
+
+<#
+	foreach(ConcreteTableInheritance inheritance in inheritances)
+    {
+		// public ITable<DataEntityA> GetDataTable(TestContext db) => db.DataEntityA;
+		var concreteTable = inheritance.ConcreteTables.First(x => x.EntityEnumValue == entityValue).Table;
+#>
+		public ITable<<#=concreteTable#>> <#=inheritance.GetTableMethod#>(<#=DataContextName#> db) => db.<#=concreteTable#>;
+<#
+    }
+#>
+	}
+<#
+}
+#>
+
+	public class Factory
+	{
+<#
+var baseTypeParameters = inheritances.OrderBy(x => x.BaseClass).Select(x => x.BaseClass).Aggregate((s1, s2) => s1 + ", " + s2);
+#>
+		public static IMapper<<#=baseTypeParameters#>> GetMapper(Entity entity) => GetMapper(entity.Type);
+		public static IMapper<<#=baseTypeParameters#>> GetMapper(<#=conf.EntityEnumType#> type)
+		{
+<#
+foreach (string entityValue in conf.EntityEnumValues)
+{
+#>
+			if (type == <#=conf.EntityEnumType#>.<#=entityValue#>)
+				return new Mapper<#=entityValue#>();
+<#
+}
+#>
+			throw new ArgumentException($"No mapping for entityEnumValue='{type}'");
+		}
+	}
+}
+<#
+}
+#>

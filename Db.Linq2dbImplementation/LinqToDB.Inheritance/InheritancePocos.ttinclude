@@ -1,0 +1,40 @@
+﻿<#+
+class InheritanceConfiguration
+{
+	public string EntityEnumType { get; set; }
+	public string EntityTypeColumn { get; set; }
+	public IEnumerable<string> EntityEnumValues { get; set; }
+	public IEnumerable<ConcreteTableInheritance> Inheritances { get; set; }
+
+	public InheritanceConfiguration()
+    {
+		EntityEnumValues = new List<string>();
+		Inheritances = new List<ConcreteTableInheritance>();
+    }
+}
+
+class ConcreteTableInheritance
+{
+    public string BaseClass { get; set; }
+	public string TypeParameter { get; set; }
+	public string GetTableMethod { get; set; }
+	public IEnumerable<ConcreteTable> ConcreteTables { get; set; }
+
+	public ConcreteTableInheritance()
+    {
+		ConcreteTables = new List<ConcreteTable>();
+    }
+}
+
+class ConcreteTable
+{
+    public string Table { get; }
+	public string EntityEnumValue { get; }
+
+	public ConcreteTable(string table, string entityEnumValue)
+    {
+		Table = table;
+		EntityEnumValue = entityEnumValue;
+    }
+}
+#>

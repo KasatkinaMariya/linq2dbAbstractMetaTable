@@ -44,6 +44,8 @@ bool SingularizeDataContextPropertyNames = false;
 
 bool NormalizeNames                      = true;
 
+InheritanceConfiguration InheritanceConf = new InheritanceConfiguration();
+
 private Func<string, bool, string> _toValidName;
 Func<string, bool, string> ToValidName
 {

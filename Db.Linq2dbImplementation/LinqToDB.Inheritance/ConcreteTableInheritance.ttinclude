@@ -1,0 +1,42 @@
+﻿<#
+	{
+		var beforeGenerateModel = BeforeGenerateModel;
+		BeforeGenerateModel = () =>
+		{
+			beforeGenerateModel();
+			ConcreteTableInheritanceImpl();
+		};
+	}
+#>
+<#+
+void ConcreteTableInheritanceImpl()
+{
+	var tables = GetTreeNodes(Model).OfType<Table>().ToList();
+	var conf = InheritanceConf;
+	foreach (ConcreteTableInheritance inheritance in conf.Inheritances)
+    {
+		MemberGroup columnsMemberGroup = null;
+
+		foreach (ConcreteTable concreteTableDesc in inheritance.ConcreteTables)
+        {
+			var table = tables.First(x => x.Name == concreteTableDesc.Table);
+
+			table.BaseClass = inheritance.BaseClass;
+			table.Columns[conf.EntityTypeColumn].Type = conf.EntityEnumType;
+
+			columnsMemberGroup = table.Members.OfType<MemberGroup>()
+								.Where(group => group.Members.All(member => member is Column))
+								.FirstOrDefault();
+			table.Members.Remove(columnsMemberGroup);
+        }
+
+		var baseTable = new Table
+		{
+			BaseClass = BaseEntityClass,
+			TypeName = inheritance.BaseClass,
+			Members = new List<IClassMember> {columnsMemberGroup},
+		};
+		Model.Types.Add(baseTable);
+    }
+}
+#>

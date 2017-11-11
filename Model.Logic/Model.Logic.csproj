@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SomeRelatedManager.cs" />
+    <Compile Include="LinkManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Db.Linq2dbImplementation\Db.Linq2dbImplementation.csproj">
