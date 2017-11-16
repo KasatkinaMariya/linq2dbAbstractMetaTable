@@ -349,13 +349,20 @@ namespace Db.Linq2dbImplementation.Mapping
 
 	public class Factory
 	{
+		private static Dictionary<EntityType, Func<IMapper<DataEntityBase, LinkEntityBase>>> _enumValueToMapperFunc
+			= new Dictionary<EntityType, Func<IMapper<DataEntityBase, LinkEntityBase>>>
+			{
+				{ EntityType.TypeA, () => new MapperTypeA() },
+				{ EntityType.TypeB, () => new MapperTypeB() },
+			};
+
 		public static IMapper<DataEntityBase, LinkEntityBase> GetMapper(Entity entity) => GetMapper(entity.Type);
 		public static IMapper<DataEntityBase, LinkEntityBase> GetMapper(EntityType type)
 		{
-			if (type == EntityType.TypeA)
-				return new MapperTypeA();
-			if (type == EntityType.TypeB)
-				return new MapperTypeB();
+			Func<IMapper<DataEntityBase, LinkEntityBase>> createMapper;
+			if (_enumValueToMapperFunc.TryGetValue(type, out createMapper))
+				return createMapper();
+
 			throw new ArgumentException($"No mapping for entityEnumValue='{type}'");
 		}
 	}

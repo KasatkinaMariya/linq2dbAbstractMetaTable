@@ -86,19 +86,28 @@ foreach (string entityValue in conf.EntityEnumValues)
 	{
 <#
 var baseTypeParameters = inheritances.OrderBy(x => x.BaseClass).Select(x => x.BaseClass).Aggregate((s1, s2) => s1 + ", " + s2);
+var mapperBaseDeclaration = string.Format("IMapper<{0}>", baseTypeParameters);
 #>
-		public static IMapper<<#=baseTypeParameters#>> GetMapper(Entity entity) => GetMapper(entity.Type);
-		public static IMapper<<#=baseTypeParameters#>> GetMapper(<#=conf.EntityEnumType#> type)
-		{
+		private static Dictionary<<#=conf.EntityEnumType#>, Func<<#=mapperBaseDeclaration#>>> _enumValueToMapperFunc
+			= new Dictionary<<#=conf.EntityEnumType#>, Func<<#=mapperBaseDeclaration#>>>
+			{
 <#
 foreach (string entityValue in conf.EntityEnumValues)
 {
 #>
-			if (type == <#=conf.EntityEnumType#>.<#=entityValue#>)
-				return new Mapper<#=entityValue#>();
+				{ <#=conf.EntityEnumType#>.<#=entityValue#>, () => new Mapper<#=entityValue#>() },
 <#
 }
 #>
+			};
+
+		public static <#=mapperBaseDeclaration#> GetMapper(Entity entity) => GetMapper(entity.Type);
+		public static <#=mapperBaseDeclaration#> GetMapper(<#=conf.EntityEnumType#> type)
+		{
+			Func<<#=mapperBaseDeclaration#>> createMapper;
+			if (_enumValueToMapperFunc.TryGetValue(type, out createMapper))
+				return createMapper();
+
 			throw new ArgumentException($"No mapping for entityEnumValue='{type}'");
 		}
 	}
