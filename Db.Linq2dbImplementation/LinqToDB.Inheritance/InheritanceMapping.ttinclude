@@ -7,20 +7,21 @@ namespace Db.Linq2dbImplementation.DataModels
 {
 <#
 var inheritances = conf.Inheritances;
+var entityTypeProperty = conf.EntityEnumTypeProperty;
 foreach (ConcreteTableInheritance inheritance in inheritances)
 {
 #>
-	public abstract partial class <#=inheritance.BaseClass#> {}
+	public abstract partial class <#=inheritance.BaseClass#>
+	{
+		[NotColumn] public abstract <#=conf.EntityEnumType#> <#=entityTypeProperty#> { get; }
+	}
 <#
 	foreach (ConcreteTable concreteTable in inheritance.ConcreteTables)
 	{
 #>
 	public partial class <#=concreteTable.Table#> : <#=inheritance.BaseClass#>
 	{
-		public <#=concreteTable.Table#>()
-		{
-			<#=conf.EntityTypeColumn#> = <#=conf.EntityEnumType#>.<#=concreteTable.EntityEnumValue#>;
-		}
+		public override <#=conf.EntityEnumType#> <#=entityTypeProperty#> => <#=conf.EntityEnumType#>.<#=concreteTable.EntityEnumValue#>;
 	}
 <#
 	}		

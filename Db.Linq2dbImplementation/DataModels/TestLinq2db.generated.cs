@@ -273,12 +273,11 @@ namespace Db.Linq2dbImplementation.DataModels
 
 	public partial class DataEntityBase
 	{
-		[PrimaryKey, Identity] public int            Id         { get; set; } // integer
-		[Column,     NotNull ] public Guid           EntityId   { get; set; } // uuid
-		[Column,     NotNull ] public Guid           SourceId   { get; set; } // uuid
-		[Column,     NotNull ] public decimal        Value      { get; set; } // numeric(4,2)
-		[Column,     NotNull ] public DateTimeOffset Timestamp  { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     EntityType { get; set; } // smallint
+		[PrimaryKey, Identity] public int            Id        { get; set; } // integer
+		[Column,     NotNull ] public Guid           EntityId  { get; set; } // uuid
+		[Column,     NotNull ] public Guid           SourceId  { get; set; } // uuid
+		[Column,     NotNull ] public decimal        Value     { get; set; } // numeric(4,2)
+		[Column,     NotNull ] public DateTimeOffset Timestamp { get; set; } // timestamp (6) with time zone
 	}
 
 	public partial class LinkEntityBase
@@ -287,42 +286,35 @@ namespace Db.Linq2dbImplementation.DataModels
 		[Column,     NotNull ] public Guid           EntityId            { get; set; } // uuid
 		[Column,     NotNull ] public Guid           LinkedObjectId      { get; set; } // uuid
 		[Column,     NotNull ] public DateTimeOffset LastAccessTimestamp { get; set; } // timestamp (6) with time zone
-		[Column,     NotNull ] public EntityType     EntityType          { get; set; } // smallint
 	}
 }
 
 namespace Db.Linq2dbImplementation.DataModels
 {
-	public abstract partial class DataEntityBase {}
+	public abstract partial class DataEntityBase
+	{
+		[NotColumn] public abstract EntityType EntityType { get; }
+	}
 	public partial class DataEntityA : DataEntityBase
 	{
-		public DataEntityA()
-		{
-			EntityType = EntityType.TypeA;
-		}
+		public override EntityType EntityType => EntityType.TypeA;
 	}
 	public partial class DataEntityB : DataEntityBase
 	{
-		public DataEntityB()
-		{
-			EntityType = EntityType.TypeB;
-		}
+		public override EntityType EntityType => EntityType.TypeB;
 	}
 
-	public abstract partial class LinkEntityBase {}
+	public abstract partial class LinkEntityBase
+	{
+		[NotColumn] public abstract EntityType EntityType { get; }
+	}
 	public partial class LinkEntityA : LinkEntityBase
 	{
-		public LinkEntityA()
-		{
-			EntityType = EntityType.TypeA;
-		}
+		public override EntityType EntityType => EntityType.TypeA;
 	}
 	public partial class LinkEntityB : LinkEntityBase
 	{
-		public LinkEntityB()
-		{
-			EntityType = EntityType.TypeB;
-		}
+		public override EntityType EntityType => EntityType.TypeB;
 	}
 
 }

@@ -2,7 +2,7 @@
 class InheritanceConfiguration
 {
 	public string EntityEnumType { get; set; }
-	public string EntityTypeColumn { get; set; }
+	public string EntityEnumTypeProperty { get; set; }
 	public IEnumerable<string> EntityEnumValues { get; set; }
 	public IEnumerable<ConcreteTableInheritance> Inheritances { get; set; }
 

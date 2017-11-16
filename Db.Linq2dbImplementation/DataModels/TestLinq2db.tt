@@ -22,7 +22,7 @@
 	InheritanceConf = new InheritanceConfiguration
 	{
 		EntityEnumType = "EntityType",
-		EntityTypeColumn = "EntityType",
+		EntityEnumTypeProperty = "EntityType",
 		EntityEnumValues = new[] {"TypeA", "TypeB"},
 		Inheritances = new List<ConcreteTableInheritance>
 		{

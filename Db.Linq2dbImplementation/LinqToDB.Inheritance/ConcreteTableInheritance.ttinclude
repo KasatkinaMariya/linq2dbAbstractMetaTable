@@ -22,7 +22,6 @@ void ConcreteTableInheritanceImpl()
 			var table = tables.First(x => x.Name == concreteTableDesc.Table);
 
 			table.BaseClass = inheritance.BaseClass;
-			table.Columns[conf.EntityTypeColumn].Type = conf.EntityEnumType;
 
 			columnsMemberGroup = table.Members.OfType<MemberGroup>()
 								.Where(group => group.Members.All(member => member is Column))
