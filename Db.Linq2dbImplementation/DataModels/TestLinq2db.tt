@@ -23,7 +23,6 @@
 	{
 		EntityEnumType = "EntityType",
 		EntityEnumTypeProperty = "EntityType",
-		EntityEnumValues = new[] {"TypeA", "TypeB"},
 		Inheritances = new List<ConcreteTableInheritance>
 		{
 			new ConcreteTableInheritance

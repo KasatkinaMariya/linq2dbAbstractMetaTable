@@ -3,12 +3,18 @@ class InheritanceConfiguration
 {
 	public string EntityEnumType { get; set; }
 	public string EntityEnumTypeProperty { get; set; }
-	public IEnumerable<string> EntityEnumValues { get; set; }
 	public IEnumerable<ConcreteTableInheritance> Inheritances { get; set; }
+
+	public IEnumerable<string> EntityEnumValues
+    {
+		get
+        {
+			return Inheritances.SelectMany(inh => inh.ConcreteTables.Select(table => table.EntityEnumValue)).Distinct();
+        }
+    }
 
 	public InheritanceConfiguration()
     {
-		EntityEnumValues = new List<string>();
 		Inheritances = new List<ConcreteTableInheritance>();
     }
 }
